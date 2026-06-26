@@ -1,0 +1,91 @@
+// Prisma schema for the Movies app backend.
+// Uses SQLite for zero-config local/dev setup. Swap the datasource provider
+// to "postgresql" and set DATABASE_URL for production.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+
+  lists    MovieList[]
+  ratings  Rating[]
+  comments Comment[]
+}
+
+// A user-created collection of titles (movies/series) gathered from different platforms.
+model MovieList {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  isPublic    Boolean  @default(false)
+  // Short opaque id used for public sharing links.
+  shareId     String   @unique @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  items ListItem[]
+
+  @@index([userId])
+}
+
+// A single title saved inside a list. We cache a little TMDB metadata so the
+// list renders without an extra round-trip per item.
+model ListItem {
+  id         String   @id @default(cuid())
+  tmdbId     Int
+  mediaType  String // "movie" | "tv"
+  title      String
+  posterPath String?
+  note       String?
+  addedAt    DateTime @default(now())
+
+  listId String
+  list   MovieList @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  @@unique([listId, tmdbId, mediaType])
+  @@index([listId])
+}
+
+// A star rating a user gives to a title. One rating per user per title.
+model Rating {
+  id        String   @id @default(cuid())
+  tmdbId    Int
+  mediaType String // "movie" | "tv"
+  stars     Int // 1..5
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tmdbId, mediaType])
+  @@index([tmdbId, mediaType])
+}
+
+// A free-text review/comment a user leaves on a title.
+model Comment {
+  id        String   @id @default(cuid())
+  tmdbId    Int
+  mediaType String // "movie" | "tv"
+  body      String
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tmdbId, mediaType])
+}
