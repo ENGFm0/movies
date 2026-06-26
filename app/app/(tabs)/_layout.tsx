@@ -31,6 +31,14 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="recommend"
+        options={{
+          title: "ترشيحات اليوم",
+          tabBarLabel: "ترشيحات",
+          tabBarIcon: ({ color }) => <TabIcon glyph="🎯" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="search"
         options={{
           title: "بحث",

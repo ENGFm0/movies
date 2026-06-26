@@ -15,6 +15,7 @@ import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-rou
 import * as Linking from "expo-linking";
 import { api } from "@/api/client";
 import { posterUrl, MediaType } from "@/api/tmdb";
+import { Stars } from "@/components/Stars";
 import { colors, radius } from "@/theme";
 
 interface Item {
@@ -23,6 +24,8 @@ interface Item {
   mediaType: MediaType;
   title: string;
   posterPath?: string | null;
+  rank: number;
+  ownerStars?: number | null;
 }
 interface ListDetail {
   id: string;
@@ -72,9 +75,22 @@ export default function ListDetailScreen() {
       return;
     }
     const url = Linking.createURL(`/shared/${list.shareId}`);
-    await Share.share({
-      message: `شف قائمة أفلامي "${list.title}" 🎬\n${url}`,
-    });
+    await Share.share({ message: `شف قائمة أفلامي "${list.title}" 🎬\n${url}` });
+  }
+
+  // Move an item up/down one slot and persist the new order.
+  async function move(index: number, dir: -1 | 1) {
+    if (!list) return;
+    const target = index + dir;
+    if (target < 0 || target >= list.items.length) return;
+    const items = [...list.items];
+    [items[index], items[target]] = [items[target], items[index]];
+    const reRanked = items.map((it, i) => ({ ...it, rank: i + 1 }));
+    setList({ ...list, items: reRanked });
+    await api(`/api/lists/${id}/order`, {
+      method: "PUT",
+      body: { itemIds: reRanked.map((i) => i.id) },
+    }).catch(() => load());
   }
 
   async function removeItem(itemId: string) {
@@ -118,9 +134,7 @@ export default function ListDetailScreen() {
       <FlatList
         data={list.items}
         keyExtractor={(i) => i.id}
-        numColumns={3}
-        columnWrapperStyle={{ gap: 10, paddingHorizontal: 16 }}
-        contentContainerStyle={{ paddingBottom: 30, gap: 14 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 30 }}
         ListHeaderComponent={
           <View style={styles.header}>
             {list.description ? <Text style={styles.desc}>{list.description}</Text> : null}
@@ -138,37 +152,71 @@ export default function ListDetailScreen() {
                 <Text style={styles.shareBtnText}>↗ مشاركة</Text>
               </Pressable>
             </View>
-            <Pressable onPress={confirmDeleteList} style={styles.deleteListBtn}>
-              <Text style={styles.deleteListText}>حذف القائمة</Text>
-            </Pressable>
-            <Text style={styles.countLabel}>{list.items.length} عنصر</Text>
+            <View style={styles.subRow}>
+              <Text style={styles.countLabel}>{list.items.length} عمل • مرتّبة بترتيبك</Text>
+              <Pressable onPress={confirmDeleteList}>
+                <Text style={styles.deleteListText}>حذف القائمة</Text>
+              </Pressable>
+            </View>
           </View>
         }
         ListEmptyComponent={
-          <Text style={styles.empty}>القائمة فاضية. أضف أفلام من صفحة الفيلم 🎬</Text>
+          <Text style={styles.empty}>القائمة فاضية. أضف أعمال من صفحة الفيلم 🎬</Text>
         }
-        renderItem={({ item }) => (
-          <Pressable
-            style={styles.tile}
-            onPress={() => router.push(`/title/${item.mediaType}/${item.tmdbId}`)}
-            onLongPress={() =>
-              Alert.alert(item.title, "حذف من القائمة؟", [
-                { text: "إلغاء", style: "cancel" },
-                { text: "حذف", style: "destructive", onPress: () => removeItem(item.id) },
-              ])
-            }
-          >
-            {posterUrl(item.posterPath) ? (
-              <Image source={{ uri: posterUrl(item.posterPath)! }} style={styles.tilePoster} />
-            ) : (
-              <View style={[styles.tilePoster, styles.tilePlaceholder]}>
-                <Text style={{ fontSize: 26 }}>🎬</Text>
+        renderItem={({ item, index }) => (
+          <View style={styles.row}>
+            <Text style={styles.rank}>{item.rank}</Text>
+            <Pressable
+              style={styles.rowMain}
+              onPress={() => router.push(`/title/${item.mediaType}/${item.tmdbId}`)}
+            >
+              {posterUrl(item.posterPath, "w185") ? (
+                <Image source={{ uri: posterUrl(item.posterPath, "w185")! }} style={styles.poster} />
+              ) : (
+                <View style={[styles.poster, styles.posterPlaceholder]}>
+                  <Text style={{ fontSize: 22 }}>🎬</Text>
+                </View>
+              )}
+              <View style={styles.rowText}>
+                <Text style={styles.rowTitle} numberOfLines={2}>
+                  {item.title}
+                </Text>
+                <Text style={styles.rowType}>{item.mediaType === "tv" ? "مسلسل" : "فيلم"}</Text>
+                {item.ownerStars ? (
+                  <Stars value={item.ownerStars} size={14} />
+                ) : (
+                  <Text style={styles.noRating}>بدون تقييم</Text>
+                )}
               </View>
-            )}
-            <Text style={styles.tileTitle} numberOfLines={1}>
-              {item.title}
-            </Text>
-          </Pressable>
+            </Pressable>
+            <View style={styles.reorder}>
+              <Pressable hitSlop={6} onPress={() => move(index, -1)} disabled={index === 0}>
+                <Text style={[styles.arrow, index === 0 && styles.arrowDisabled]}>▲</Text>
+              </Pressable>
+              <Pressable
+                hitSlop={6}
+                onPress={() => move(index, 1)}
+                disabled={index === list.items.length - 1}
+              >
+                <Text
+                  style={[styles.arrow, index === list.items.length - 1 && styles.arrowDisabled]}
+                >
+                  ▼
+                </Text>
+              </Pressable>
+              <Pressable
+                hitSlop={6}
+                onPress={() =>
+                  Alert.alert(item.title, "حذف من القائمة؟", [
+                    { text: "إلغاء", style: "cancel" },
+                    { text: "حذف", style: "destructive", onPress: () => removeItem(item.id) },
+                  ])
+                }
+              >
+                <Text style={styles.removeX}>✕</Text>
+              </Pressable>
+            </View>
+          </View>
         )}
       />
     </View>
@@ -178,19 +226,41 @@ export default function ListDetailScreen() {
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg },
   muted: { color: colors.textMuted },
-  header: { padding: 16 },
+  header: { marginBottom: 8 },
   desc: { color: colors.textMuted, fontSize: 15, lineHeight: 24, marginBottom: 14, textAlign: "right" },
   controlRow: { flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" },
   shareToggle: { flexDirection: "row-reverse", alignItems: "center", gap: 10 },
   toggleLabel: { color: colors.text, fontSize: 15, fontWeight: "600" },
   shareBtn: { backgroundColor: colors.surface, borderRadius: radius.md, paddingHorizontal: 18, paddingVertical: 10 },
   shareBtnText: { color: colors.text, fontWeight: "700" },
-  deleteListBtn: { marginTop: 14, alignSelf: "flex-end" },
+  subRow: { flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between", marginTop: 14 },
+  countLabel: { color: colors.textMuted, fontSize: 13, textAlign: "right" },
   deleteListText: { color: colors.primary, fontSize: 14 },
-  countLabel: { color: colors.textMuted, fontSize: 13, marginTop: 14, textAlign: "right" },
   empty: { color: colors.textMuted, textAlign: "center", marginTop: 50, paddingHorizontal: 24 },
-  tile: { flex: 1 / 3, maxWidth: "31%" },
-  tilePoster: { width: "100%", aspectRatio: 2 / 3, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
-  tilePlaceholder: { alignItems: "center", justifyContent: "center" },
-  tileTitle: { color: colors.text, fontSize: 12, fontWeight: "600", marginTop: 6, textAlign: "center" },
+  row: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 10,
+    marginTop: 12,
+  },
+  rank: {
+    color: colors.primary,
+    fontSize: 22,
+    fontWeight: "900",
+    width: 34,
+    textAlign: "center",
+  },
+  rowMain: { flex: 1, flexDirection: "row-reverse", alignItems: "center", gap: 12 },
+  poster: { width: 52, height: 78, borderRadius: radius.sm, backgroundColor: colors.surfaceAlt },
+  posterPlaceholder: { alignItems: "center", justifyContent: "center" },
+  rowText: { flex: 1 },
+  rowTitle: { color: colors.text, fontSize: 15, fontWeight: "700", textAlign: "right" },
+  rowType: { color: colors.textMuted, fontSize: 12, marginVertical: 4, textAlign: "right" },
+  noRating: { color: colors.textMuted, fontSize: 12, textAlign: "right" },
+  reorder: { alignItems: "center", gap: 8, paddingHorizontal: 4 },
+  arrow: { color: colors.text, fontSize: 16 },
+  arrowDisabled: { color: colors.border },
+  removeX: { color: colors.textMuted, fontSize: 15, marginTop: 2 },
 });

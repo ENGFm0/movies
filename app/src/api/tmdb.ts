@@ -5,8 +5,11 @@ export type MediaType = "movie" | "tv";
 export interface TitleSummary {
   id: number;
   media_type?: MediaType;
-  title?: string; // movies
-  name?: string; // tv
+  title?: string; // movies (localized)
+  name?: string; // tv (localized)
+  original_title?: string; // movies (original language, often English)
+  original_name?: string; // tv (original language)
+  original_language?: string;
   poster_path?: string | null;
   backdrop_path?: string | null;
   vote_average?: number;
@@ -28,6 +31,14 @@ export function backdropUrl(path?: string | null, size: "w780" | "w1280" = "w128
 // TMDB returns a different field for movies vs tv — normalize it.
 export function titleName(t: TitleSummary): string {
   return t.title ?? t.name ?? "بدون عنوان";
+}
+
+// The original-language title (usually the English/international name). Returned
+// only when it differs from the localized (Arabic) name, so the UI can show both.
+export function originalName(t: TitleSummary): string | null {
+  const original = t.original_title ?? t.original_name;
+  if (!original) return null;
+  return original === titleName(t) ? null : original;
 }
 
 export function titleYear(t: TitleSummary): string {

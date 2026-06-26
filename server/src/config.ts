@@ -13,6 +13,9 @@ export const config = {
     baseUrl: "https://api.themoviedb.org/3",
     imageBaseUrl: "https://image.tmdb.org/t/p",
   },
+  // Optional: OMDb (https://www.omdbapi.com/apikey.aspx) for the numeric IMDb
+  // rating. Without it the app still links out to IMDb.
+  omdbApiKey: process.env.OMDB_API_KEY ?? "",
 };
 
 export const hasTmdbCredentials = Boolean(

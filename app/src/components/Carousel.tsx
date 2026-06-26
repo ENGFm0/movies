@@ -9,10 +9,11 @@ interface Props {
   title: string;
   data: TitleSummary[];
   fallbackType?: "movie" | "tv";
+  ranked?: boolean; // show numbered "top" badges (1, 2, 3, ...)
 }
 
 // A titled, horizontally-scrolling row of poster cards.
-export function Carousel({ title, data, fallbackType = "movie" }: Props) {
+export function Carousel({ title, data, fallbackType = "movie", ranked }: Props) {
   const router = useRouter();
   if (!data.length) return null;
   return (
@@ -24,9 +25,10 @@ export function Carousel({ title, data, fallbackType = "movie" }: Props) {
         data={data}
         keyExtractor={(item, i) => `${item.id}-${i}`}
         contentContainerStyle={styles.list}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <PosterCard
             item={item}
+            rank={ranked ? index + 1 : undefined}
             onPress={() => {
               const type = resolveMediaType(item, fallbackType);
               router.push(`/title/${type}/${item.id}`);

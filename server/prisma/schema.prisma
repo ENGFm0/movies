@@ -18,9 +18,12 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
-  lists    MovieList[]
-  ratings  Rating[]
-  comments Comment[]
+  lists           MovieList[]
+  ratings         Rating[]
+  comments        Comment[]
+  recommendations Recommendation[]
+  recVotes        RecommendationVote[]
+  recComments     RecommendationComment[]
 }
 
 // A user-created collection of titles (movies/series) gathered from different platforms.
@@ -51,6 +54,8 @@ model ListItem {
   title      String
   posterPath String?
   note       String?
+  // Manual rank within the list (0-based). Lower = higher up the chart.
+  order      Int      @default(0)
   addedAt    DateTime @default(now())
 
   listId String
@@ -88,4 +93,57 @@ model Comment {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([tmdbId, mediaType])
+}
+
+// A user's recommendation of a title ("فيلم السهرة") that appears in the
+// community recommendations feed. Others can up/down vote and comment on it.
+model Recommendation {
+  id         String   @id @default(cuid())
+  tmdbId     Int
+  mediaType  String // "movie" | "tv"
+  title      String
+  posterPath String?
+  // Optional "why I recommend it" note from the recommender.
+  note       String?
+  createdAt  DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  votes    RecommendationVote[]
+  comments RecommendationComment[]
+
+  // One recommendation per user per title (re-recommending just updates the note).
+  @@unique([userId, tmdbId, mediaType])
+  @@index([createdAt])
+}
+
+// A like (+1) or dislike (-1) on a recommendation. One vote per user.
+model RecommendationVote {
+  id    String @id @default(cuid())
+  value Int // 1 = like, -1 = dislike
+
+  recommendationId String
+  recommendation   Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([recommendationId, userId])
+  @@index([recommendationId])
+}
+
+// A comment on a recommendation in the feed.
+model RecommendationComment {
+  id        String   @id @default(cuid())
+  body      String
+  createdAt DateTime @default(now())
+
+  recommendationId String
+  recommendation   Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([recommendationId])
 }

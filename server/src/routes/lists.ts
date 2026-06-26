@@ -19,13 +19,45 @@ const itemInput = z.object({
   note: z.string().trim().max(300).optional(),
 });
 
+type RawItem = {
+  id: string;
+  tmdbId: number;
+  mediaType: string;
+  title: string;
+  posterPath: string | null;
+  note: string | null;
+  order: number;
+};
+
+// Attach the list owner's own star rating to each item, so a (shared) list can
+// be shown as a personal ranked chart with ratings.
+async function withOwnerRatings(ownerId: string, items: RawItem[]) {
+  if (items.length === 0) return [];
+  const ratings = await prisma.rating.findMany({
+    where: {
+      userId: ownerId,
+      OR: items.map((i) => ({ tmdbId: i.tmdbId, mediaType: i.mediaType })),
+    },
+    select: { tmdbId: true, mediaType: true, stars: true },
+  });
+  const key = (t: number, m: string) => `${m}:${t}`;
+  const byKey = new Map(ratings.map((r) => [key(r.tmdbId, r.mediaType), r.stars]));
+  return items.map((i, idx) => ({
+    ...i,
+    rank: idx + 1,
+    ownerStars: byKey.get(key(i.tmdbId, i.mediaType)) ?? null,
+  }));
+}
+
+const itemOrderBy = [{ order: "asc" as const }, { addedAt: "asc" as const }];
+
 // --- Public: view a shared list by its share id (no auth needed) ---
 listsRouter.get("/shared/:shareId", async (req, res) => {
   const list = await prisma.movieList.findUnique({
     where: { shareId: req.params.shareId },
     include: {
-      items: { orderBy: { addedAt: "desc" } },
-      user: { select: { name: true } },
+      items: { orderBy: itemOrderBy },
+      user: { select: { id: true, name: true } },
     },
   });
   if (!list || !list.isPublic) {
@@ -37,7 +69,7 @@ listsRouter.get("/shared/:shareId", async (req, res) => {
     description: list.description,
     owner: list.user.name,
     shareId: list.shareId,
-    items: list.items,
+    items: await withOwnerRatings(list.user.id, list.items),
   });
 });
 
@@ -73,14 +105,14 @@ listsRouter.post("/", async (req: AuthedRequest, res) => {
   res.status(201).json(list);
 });
 
-// Full list with items — only the owner can fetch the private view.
+// Full list with items (ranked + my rating per item) — owner only.
 listsRouter.get("/:id", async (req: AuthedRequest, res) => {
   const list = await prisma.movieList.findFirst({
     where: { id: req.params.id, userId: req.userId },
-    include: { items: { orderBy: { addedAt: "desc" } } },
+    include: { items: { orderBy: itemOrderBy } },
   });
   if (!list) return res.status(404).json({ error: "List not found" });
-  res.json(list);
+  res.json({ ...list, items: await withOwnerRatings(req.userId!, list.items) });
 });
 
 listsRouter.patch("/:id", async (req: AuthedRequest, res) => {
@@ -103,7 +135,29 @@ listsRouter.delete("/:id", async (req: AuthedRequest, res) => {
   res.status(204).end();
 });
 
-// Add a title to a list (idempotent on listId+tmdbId+mediaType).
+// Reorder items: body { itemIds: [...] } in the new top-to-bottom order.
+listsRouter.put("/:id/order", async (req: AuthedRequest, res) => {
+  const parsed = z.object({ itemIds: z.array(z.string()).min(1) }).safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: "Invalid input" });
+
+  const list = await prisma.movieList.findFirst({
+    where: { id: req.params.id, userId: req.userId },
+  });
+  if (!list) return res.status(404).json({ error: "List not found" });
+
+  await prisma.$transaction(
+    parsed.data.itemIds.map((itemId, index) =>
+      prisma.listItem.updateMany({
+        where: { id: itemId, listId: list.id },
+        data: { order: index },
+      })
+    )
+  );
+  res.status(204).end();
+});
+
+// Add a title to a list (idempotent on listId+tmdbId+mediaType). New items are
+// appended to the end of the ranked list.
 listsRouter.post("/:id/items", async (req: AuthedRequest, res) => {
   const parsed = itemInput.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: "Invalid input" });
@@ -114,6 +168,13 @@ listsRouter.post("/:id/items", async (req: AuthedRequest, res) => {
   if (!list) return res.status(404).json({ error: "List not found" });
 
   const data = parsed.data;
+  const last = await prisma.listItem.findFirst({
+    where: { listId: list.id },
+    orderBy: { order: "desc" },
+    select: { order: true },
+  });
+  const nextOrder = (last?.order ?? -1) + 1;
+
   const item = await prisma.listItem.upsert({
     where: {
       listId_tmdbId_mediaType: {
@@ -122,7 +183,7 @@ listsRouter.post("/:id/items", async (req: AuthedRequest, res) => {
         mediaType: data.mediaType,
       },
     },
-    create: { ...data, posterPath: data.posterPath ?? null, listId: list.id },
+    create: { ...data, posterPath: data.posterPath ?? null, listId: list.id, order: nextOrder },
     update: { note: data.note },
   });
   await prisma.movieList.update({ where: { id: list.id }, data: { updatedAt: new Date() } });

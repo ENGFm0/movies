@@ -34,6 +34,7 @@ export default function RootLayout() {
           <Stack.Screen name="title/[mediaType]/[id]" options={{ title: "" }} />
           <Stack.Screen name="list/[id]" options={{ title: "القائمة" }} />
           <Stack.Screen name="shared/[shareId]" options={{ title: "قائمة مشتركة" }} />
+          <Stack.Screen name="recommendation/[id]" options={{ title: "الترشيح" }} />
         </Stack>
       </AuthProvider>
     </SafeAreaProvider>

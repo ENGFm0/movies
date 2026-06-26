@@ -98,7 +98,9 @@ export function searchMulti(query: string, page = 1) {
 // streaming/cinema providers (where it can be watched) for the region.
 export function getDetails(mediaType: "movie" | "tv", id: number) {
   return tmdbGet<Record<string, unknown>>(`/${mediaType}/${id}`, {
-    append_to_response: "credits,videos,watch/providers,similar,release_dates",
+    // external_ids -> imdb_id; translations -> English title alongside Arabic.
+    append_to_response:
+      "credits,videos,watch/providers,similar,release_dates,external_ids,translations",
   });
 }
 

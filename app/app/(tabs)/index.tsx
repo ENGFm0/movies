@@ -115,10 +115,10 @@ export default function HomeScreen() {
         </Pressable>
       )}
 
-      <Carousel title="🎬 الأعلى في السينما الآن" data={nowPlaying} fallbackType="movie" />
-      <Carousel title="🔥 رائج على كل المنصات" data={trending} />
-      <Carousel title="📺 مسلسلات شائعة" data={popularTv} fallbackType="tv" />
-      <Carousel title="⭐ الأعلى تقييماً" data={topRated} fallbackType="movie" />
+      <Carousel title="🎬 الأعلى في السينما الآن" data={nowPlaying} fallbackType="movie" ranked />
+      <Carousel title="🔥 رائج على كل المنصات" data={trending} ranked />
+      <Carousel title="📺 مسلسلات شائعة" data={popularTv} fallbackType="tv" ranked />
+      <Carousel title="⭐ الأعلى تقييماً" data={topRated} fallbackType="movie" ranked />
     </ScrollView>
   );
 }

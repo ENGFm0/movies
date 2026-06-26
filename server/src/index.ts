@@ -5,6 +5,7 @@ import { authRouter } from "./routes/auth";
 import { tmdbRouter } from "./routes/tmdb";
 import { listsRouter } from "./routes/lists";
 import { titlesRouter } from "./routes/titles";
+import { recommendationsRouter } from "./routes/recommendations";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/tmdb", tmdbRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/titles", titlesRouter);
+app.use("/api/recommendations", recommendationsRouter);
 
 // Fallback 404 for unknown API routes.
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));

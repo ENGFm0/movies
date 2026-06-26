@@ -1,11 +1,33 @@
 import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../prisma";
+import { config } from "../config";
 import { requireAuth, optionalAuth, AuthedRequest } from "../middleware/auth";
 
 // Ratings (stars) and comments for a title, aggregated across all app users.
 // A "title" is identified by mediaType ("movie"|"tv") + tmdbId.
 export const titlesRouter = Router();
+
+// IMDb rating via OMDb (optional). Returns { configured, imdbRating, imdbVotes }.
+// imdbId looks like "tt1234567". Registered before the /:mediaType routes.
+titlesRouter.get("/imdb/:imdbId", async (req, res) => {
+  const imdbId = req.params.imdbId;
+  if (!/^tt\d+$/.test(imdbId)) return res.status(400).json({ error: "Invalid IMDb id" });
+  if (!config.omdbApiKey) return res.json({ configured: false });
+  try {
+    const r = await fetch(
+      `https://www.omdbapi.com/?apikey=${config.omdbApiKey}&i=${imdbId}`
+    );
+    const data = (await r.json()) as { imdbRating?: string; imdbVotes?: string };
+    res.json({
+      configured: true,
+      imdbRating: data.imdbRating && data.imdbRating !== "N/A" ? data.imdbRating : null,
+      imdbVotes: data.imdbVotes && data.imdbVotes !== "N/A" ? data.imdbVotes : null,
+    });
+  } catch {
+    res.json({ configured: true, imdbRating: null, imdbVotes: null });
+  }
+});
 
 function parseParams(req: AuthedRequest) {
   const mediaType = req.params.mediaType === "tv" ? "tv" : "movie";
