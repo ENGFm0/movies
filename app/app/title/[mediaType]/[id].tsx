@@ -17,7 +17,7 @@ import { api, ApiError } from "@/api/client";
 import { useAuth } from "@/context/AuthContext";
 import { Stars } from "@/components/Stars";
 import { AddToListModal } from "@/components/AddToListModal";
-import { backdropUrl, posterUrl, MediaType } from "@/api/tmdb";
+import { backdropUrl, posterUrl, providerDeepLink, MediaType } from "@/api/tmdb";
 import { colors, radius } from "@/theme";
 
 interface Provider {
@@ -44,7 +44,12 @@ interface Details {
   runtime?: number;
   genres?: { id: number; name: string }[];
   credits?: { cast?: { id: number; name: string; profile_path?: string | null; character?: string }[] };
-  "watch/providers"?: { results?: Record<string, { flatrate?: Provider[]; rent?: Provider[]; buy?: Provider[] }> };
+  "watch/providers"?: {
+    results?: Record<
+      string,
+      { link?: string; flatrate?: Provider[]; rent?: Provider[]; buy?: Provider[] }
+    >;
+  };
   external_ids?: { imdb_id?: string | null };
   translations?: { translations?: Translation[] };
 }
@@ -212,6 +217,7 @@ export default function TitleScreen() {
   const year = (details.release_date ?? details.first_air_date ?? "").slice(0, 4);
   const providersByRegion = details["watch/providers"]?.results ?? {};
   const regionProviders = providersByRegion[REGION] ?? providersByRegion["US"];
+  const justWatchLink = regionProviders?.link ?? null;
   const watchOn = [
     ...(regionProviders?.flatrate ?? []),
     ...(regionProviders?.rent ?? []),
@@ -221,6 +227,12 @@ export default function TitleScreen() {
   const uniqueProviders = Array.from(
     new Map(watchOn.map((p) => [p.provider_id, p])).values()
   );
+
+  // Open the title on the tapped platform; fall back to the JustWatch page.
+  const openProvider = (providerName: string) => {
+    const url = providerDeepLink(providerName, name) ?? justWatchLink;
+    if (url) Linking.openURL(url);
+  };
   const cast = details.credits?.cast?.slice(0, 12) ?? [];
 
   return (
@@ -282,13 +294,18 @@ export default function TitleScreen() {
         </Pressable>
       </View>
 
-      {/* Where to watch */}
-      {uniqueProviders.length > 0 && (
+      {/* Where to watch — tap a platform to open the title there */}
+      {uniqueProviders.length > 0 ? (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📍 وين تشوفه</Text>
+          <Text style={styles.sectionHint}>اضغط المنصة عشان تفتح العمل عليها</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
             {uniqueProviders.map((p) => (
-              <View key={p.provider_id} style={styles.provider}>
+              <Pressable
+                key={p.provider_id}
+                style={styles.provider}
+                onPress={() => openProvider(p.provider_name)}
+              >
                 <Image
                   source={{ uri: `https://image.tmdb.org/t/p/w92${p.logo_path}` }}
                   style={styles.providerLogo}
@@ -296,11 +313,23 @@ export default function TitleScreen() {
                 <Text style={styles.providerName} numberOfLines={1}>
                   {p.provider_name}
                 </Text>
-              </View>
+              </Pressable>
             ))}
           </ScrollView>
+          {justWatchLink && (
+            <Pressable style={styles.allPlatforms} onPress={() => Linking.openURL(justWatchLink)}>
+              <Text style={styles.allPlatformsText}>كل المنصات والأسعار ↗</Text>
+            </Pressable>
+          )}
         </View>
-      )}
+      ) : justWatchLink ? (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>📍 وين تشوفه</Text>
+          <Pressable style={styles.allPlatforms} onPress={() => Linking.openURL(justWatchLink)}>
+            <Text style={styles.allPlatformsText}>اعرف وين يُعرض ↗</Text>
+          </Pressable>
+        </View>
+      ) : null}
 
       {details.overview ? (
         <View style={styles.section}>
@@ -510,6 +539,15 @@ const styles = StyleSheet.create({
   modalBtnText: { color: "#1a1a1a", fontWeight: "900", fontSize: 16 },
   section: { paddingHorizontal: 16, marginTop: 26 },
   sectionTitle: { color: colors.text, fontSize: 18, fontWeight: "800", textAlign: "right" },
+  sectionHint: { color: colors.textMuted, fontSize: 12, marginTop: 4, textAlign: "right" },
+  allPlatforms: {
+    marginTop: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  allPlatformsText: { color: colors.text, fontWeight: "700", fontSize: 14 },
   overview: { color: colors.textMuted, fontSize: 15, lineHeight: 26, marginTop: 10, textAlign: "right" },
   provider: { alignItems: "center", marginEnd: 14, width: 64 },
   providerLogo: { width: 56, height: 56, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },

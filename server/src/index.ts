@@ -6,6 +6,7 @@ import { tmdbRouter } from "./routes/tmdb";
 import { listsRouter } from "./routes/lists";
 import { titlesRouter } from "./routes/titles";
 import { recommendationsRouter } from "./routes/recommendations";
+import { shareRouter } from "./routes/share";
 
 const app = express();
 
@@ -21,6 +22,9 @@ app.use("/api/tmdb", tmdbRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/titles", titlesRouter);
 app.use("/api/recommendations", recommendationsRouter);
+
+// Public browser page for shared lists (not under /api).
+app.use("/s", shareRouter);
 
 // Fallback 404 for unknown API routes.
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));

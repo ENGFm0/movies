@@ -12,8 +12,8 @@ import {
   View,
 } from "react-native";
 import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import * as Linking from "expo-linking";
-import { api } from "@/api/client";
+import * as Clipboard from "expo-clipboard";
+import { api, API_URL } from "@/api/client";
 import { posterUrl, MediaType } from "@/api/tmdb";
 import { Stars } from "@/components/Stars";
 import { colors, radius } from "@/theme";
@@ -68,14 +68,26 @@ export default function ListDetailScreen() {
     }
   }
 
-  async function share() {
-    if (!list) return;
-    if (!list.isPublic) {
-      Alert.alert("القائمة خاصة", "فعّل المشاركة أولاً عشان تقدر ترسل الرابط.");
-      return;
+  // A public, browser-openable link served by the backend.
+  const shareUrl = list ? `${API_URL}/s/${list.shareId}` : "";
+
+  function ensurePublic(): boolean {
+    if (!list?.isPublic) {
+      Alert.alert("القائمة خاصة", "فعّل «مشاركة عامة» أولاً عشان تقدر ترسل الرابط.");
+      return false;
     }
-    const url = Linking.createURL(`/shared/${list.shareId}`);
-    await Share.share({ message: `شف قائمة أفلامي "${list.title}" 🎬\n${url}` });
+    return true;
+  }
+
+  async function share() {
+    if (!list || !ensurePublic()) return;
+    await Share.share({ message: `شف قائمة أفلامي "${list.title}" 🎬\n${shareUrl}` });
+  }
+
+  async function copyLink() {
+    if (!list || !ensurePublic()) return;
+    await Clipboard.setStringAsync(shareUrl);
+    Alert.alert("تم نسخ الرابط ✅", shareUrl);
   }
 
   // Move an item up/down one slot and persist the new order.
@@ -138,16 +150,19 @@ export default function ListDetailScreen() {
         ListHeaderComponent={
           <View style={styles.header}>
             {list.description ? <Text style={styles.desc}>{list.description}</Text> : null}
-            <View style={styles.controlRow}>
-              <View style={styles.shareToggle}>
-                <Text style={styles.toggleLabel}>مشاركة عامة</Text>
-                <Switch
-                  value={list.isPublic}
-                  onValueChange={togglePublic}
-                  trackColor={{ true: colors.primary, false: colors.border }}
-                  thumbColor="#fff"
-                />
-              </View>
+            <View style={styles.shareToggle}>
+              <Text style={styles.toggleLabel}>مشاركة عامة</Text>
+              <Switch
+                value={list.isPublic}
+                onValueChange={togglePublic}
+                trackColor={{ true: colors.primary, false: colors.border }}
+                thumbColor="#fff"
+              />
+            </View>
+            <View style={styles.shareButtons}>
+              <Pressable style={styles.copyBtn} onPress={copyLink}>
+                <Text style={styles.copyBtnText}>🔗 نسخ الرابط</Text>
+              </Pressable>
               <Pressable style={styles.shareBtn} onPress={share}>
                 <Text style={styles.shareBtnText}>↗ مشاركة</Text>
               </Pressable>
@@ -228,10 +243,24 @@ const styles = StyleSheet.create({
   muted: { color: colors.textMuted },
   header: { marginBottom: 8 },
   desc: { color: colors.textMuted, fontSize: 15, lineHeight: 24, marginBottom: 14, textAlign: "right" },
-  controlRow: { flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" },
-  shareToggle: { flexDirection: "row-reverse", alignItems: "center", gap: 10 },
+  shareToggle: { flexDirection: "row-reverse", alignItems: "center", gap: 10, justifyContent: "space-between" },
   toggleLabel: { color: colors.text, fontSize: 15, fontWeight: "600" },
-  shareBtn: { backgroundColor: colors.surface, borderRadius: radius.md, paddingHorizontal: 18, paddingVertical: 10 },
+  shareButtons: { flexDirection: "row-reverse", gap: 10, marginTop: 12 },
+  copyBtn: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 11,
+    alignItems: "center",
+  },
+  copyBtnText: { color: "#fff", fontWeight: "800" },
+  shareBtn: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingVertical: 11,
+    alignItems: "center",
+  },
   shareBtnText: { color: colors.text, fontWeight: "700" },
   subRow: { flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between", marginTop: 14 },
   countLabel: { color: colors.textMuted, fontSize: 13, textAlign: "right" },

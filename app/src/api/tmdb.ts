@@ -53,3 +53,25 @@ export function resolveMediaType(t: TitleSummary, fallback: MediaType = "movie")
   if (t.name && !t.title) return "tv";
   return fallback;
 }
+
+// Build a "watch on this platform" deep link that lands the user on the title
+// within the given streaming service. For known providers we open the service's
+// search for the title; otherwise the caller falls back to the JustWatch link.
+export function providerDeepLink(providerName: string, title: string): string | null {
+  const q = encodeURIComponent(title);
+  const n = providerName.toLowerCase();
+  if (n.includes("netflix")) return `https://www.netflix.com/search?q=${q}`;
+  if (n.includes("shahid") || n.includes("shahed") || n.includes("mbc"))
+    return `https://shahid.mbc.net/ar/search?q=${q}`;
+  if (n.includes("osn")) return `https://www.osnplus.com/ar-sa/search?q=${q}`;
+  if (n.includes("starz")) return `https://www.starzplay.com/ar-sa/search?q=${q}`;
+  if (n.includes("apple")) return `https://tv.apple.com/search?term=${q}`;
+  if (n.includes("prime") || n.includes("amazon"))
+    return `https://www.primevideo.com/search/?phrase=${q}`;
+  if (n.includes("disney")) return `https://www.disneyplus.com/search?q=${q}`;
+  if (n.includes("stc") || n.includes("jawwy")) return `https://stctv.com.sa/search?q=${q}`;
+  if (n.includes("watch it") || n.includes("watchit")) return `https://www.watchit.com/search?q=${q}`;
+  if (n.includes("youtube")) return `https://www.youtube.com/results?search_query=${q}`;
+  if (n.includes("google play")) return `https://play.google.com/store/search?q=${q}&c=movies`;
+  return null;
+}
