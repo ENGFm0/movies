@@ -1,12 +1,7 @@
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
 import { colors } from "@/theme";
 
-// Simple emoji-based tab icons keep the bundle light (no icon font wiring needed).
-function TabIcon({ glyph, color }: { glyph: string; color: string }) {
-  return <Text style={{ fontSize: 20, color }}>{glyph}</Text>;
-}
-
+// Text-only bottom tabs (no icons).
 export default function TabsLayout() {
   return (
     <Tabs
@@ -17,59 +12,22 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
+          height: 56,
+          paddingTop: 6,
+          paddingBottom: 6,
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
+        tabBarLabelStyle: { fontSize: 13, fontWeight: "700" },
+        tabBarIconStyle: { display: "none" },
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "الرئيسية",
-          tabBarLabel: "الرئيسية",
-          tabBarIcon: ({ color }) => <TabIcon glyph="🏠" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="cinema"
-        options={{
-          title: "السينما",
-          tabBarLabel: "السينما",
-          tabBarIcon: ({ color }) => <TabIcon glyph="🎬" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="recommend"
-        options={{
-          title: "ترشيحات اليوم",
-          tabBarLabel: "ترشيحات",
-          tabBarIcon: ({ color }) => <TabIcon glyph="🎯" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "بحث",
-          tabBarLabel: "بحث",
-          tabBarIcon: ({ color }) => <TabIcon glyph="🔍" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="lists"
-        options={{
-          title: "قوائمي",
-          tabBarLabel: "قوائمي",
-          tabBarIcon: ({ color }) => <TabIcon glyph="📁" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "حسابي",
-          tabBarLabel: "حسابي",
-          tabBarIcon: ({ color }) => <TabIcon glyph="👤" color={color} />,
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: "الرئيسية", tabBarLabel: "الرئيسية" }} />
+      <Tabs.Screen name="cinema" options={{ title: "السينما", tabBarLabel: "السينما" }} />
+      <Tabs.Screen name="recommend" options={{ title: "ترشيحات اليوم", tabBarLabel: "ترشيحات" }} />
+      <Tabs.Screen name="search" options={{ title: "بحث", tabBarLabel: "بحث" }} />
+      <Tabs.Screen name="lists" options={{ title: "قوائمي", tabBarLabel: "قوائمي" }} />
+      <Tabs.Screen name="profile" options={{ title: "حسابي", tabBarLabel: "حسابي" }} />
     </Tabs>
   );
 }

@@ -64,7 +64,6 @@ export default function SearchScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <Text style={styles.searchIcon}>🔍</Text>
         <TextInput
           value={query}
           onChangeText={setQuery}

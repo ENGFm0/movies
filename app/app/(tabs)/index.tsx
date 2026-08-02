@@ -94,6 +94,10 @@ export default function HomeScreen() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
       }
     >
+      <Pressable style={styles.searchBar} onPress={() => router.push("/search")}>
+        <Text style={styles.searchText}>ابحث عن فيلم أو مسلسل</Text>
+      </Pressable>
+
       {hero && (
         <Pressable
           style={styles.hero}
@@ -115,15 +119,25 @@ export default function HomeScreen() {
         </Pressable>
       )}
 
-      <Carousel title="🎬 الأعلى في السينما الآن" data={nowPlaying} fallbackType="movie" ranked />
-      <Carousel title="🔥 رائج على كل المنصات" data={trending} ranked />
-      <Carousel title="📺 مسلسلات شائعة" data={popularTv} fallbackType="tv" ranked />
-      <Carousel title="⭐ الأعلى تقييماً" data={topRated} fallbackType="movie" ranked />
+      <Carousel title="الأعلى في السينما الآن" data={nowPlaying} fallbackType="movie" ranked />
+      <Carousel title="رائج على كل المنصات" data={trending} ranked />
+      <Carousel title="مسلسلات شائعة" data={popularTv} fallbackType="tv" ranked />
+      <Carousel title="الأعلى تقييماً" data={topRated} fallbackType="movie" ranked />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  searchBar: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  searchText: { color: colors.textMuted, fontSize: 15, textAlign: "right" },
   center: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg },
   errorText: { color: colors.textMuted, textAlign: "center", fontSize: 15, lineHeight: 24 },
   retry: {

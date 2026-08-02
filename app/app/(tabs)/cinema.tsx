@@ -105,7 +105,7 @@ export default function CinemaScreen() {
           onPress={() => setMode("now")}
         >
           <Text style={[styles.tabText, mode === "now" && styles.tabTextActive]}>
-            🎬 المعروضة الآن
+            المعروضة الآن
           </Text>
         </Pressable>
         <Pressable
@@ -113,7 +113,7 @@ export default function CinemaScreen() {
           onPress={() => setMode("soon")}
         >
           <Text style={[styles.tabText, mode === "soon" && styles.tabTextActive]}>
-            🔜 قريباً
+            قريباً
           </Text>
         </Pressable>
       </View>

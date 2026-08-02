@@ -116,7 +116,7 @@ export default function ListsScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.cardTitle}>{item.title}</Text>
               <Text style={styles.cardMeta}>
-                {item.itemCount} عنصر • {item.isPublic ? "مشتركة 🌍" : "خاصة 🔒"}
+                {item.itemCount} عنصر • {item.isPublic ? "مشتركة" : "خاصة"}
               </Text>
             </View>
             <Text style={styles.chevron}>‹</Text>
