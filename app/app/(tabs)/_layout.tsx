@@ -26,7 +26,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="cinema" options={{ title: "السينما", tabBarLabel: "السينما" }} />
       <Tabs.Screen name="recommend" options={{ title: "ترشيحات اليوم", tabBarLabel: "ترشيحات" }} />
       <Tabs.Screen name="search" options={{ title: "بحث", tabBarLabel: "بحث" }} />
-      <Tabs.Screen name="lists" options={{ title: "قوائمي", tabBarLabel: "قوائمي" }} />
+      <Tabs.Screen name="lists" options={{ title: "قائمتي", tabBarLabel: "قائمتي" }} />
       <Tabs.Screen name="profile" options={{ title: "حسابي", tabBarLabel: "حسابي" }} />
     </Tabs>
   );
