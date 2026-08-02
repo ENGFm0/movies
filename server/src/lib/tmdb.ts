@@ -66,6 +66,14 @@ export function getNowPlaying(page = 1) {
   });
 }
 
+// Movies releasing soon in cinemas for the configured region.
+export function getUpcoming(page = 1) {
+  return tmdbGet<TmdbListResponse<unknown>>("/movie/upcoming", {
+    page,
+    region: config.tmdb.region,
+  });
+}
+
 // Top trending titles across all platforms (mixed movies + tv).
 export function getTrending(window: "day" | "week" = "week", page = 1) {
   return tmdbGet<TmdbListResponse<unknown>>(`/trending/all/${window}`, { page });
@@ -106,6 +114,7 @@ export function getDetails(mediaType: "movie" | "tv", id: number) {
 
 export const tmdb = {
   getNowPlaying,
+  getUpcoming,
   getTrending,
   getPopularMovies,
   getPopularTv,

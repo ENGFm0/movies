@@ -22,6 +22,11 @@ tmdbRouter.get("/now-playing", (req, res) =>
   handle(() => tmdb.getNowPlaying(Number(req.query.page) || 1))(req, res)
 );
 
+// Movies releasing soon in cinemas (region-aware).
+tmdbRouter.get("/upcoming", (req, res) =>
+  handle(() => tmdb.getUpcoming(Number(req.query.page) || 1))(req, res)
+);
+
 // Trending across all platforms (mixed movies + series).
 tmdbRouter.get("/trending", (req, res) => {
   const window = req.query.window === "day" ? "day" : "week";

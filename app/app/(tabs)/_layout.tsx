@@ -31,6 +31,14 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="cinema"
+        options={{
+          title: "السينما",
+          tabBarLabel: "السينما",
+          tabBarIcon: ({ color }) => <TabIcon glyph="🎬" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="recommend"
         options={{
           title: "ترشيحات اليوم",
