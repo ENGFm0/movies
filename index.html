@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ParcelPal — Fast &amp; Reliable Parcel Delivery</title>
+  <meta name="description" content="ParcelPal delivers your parcels quickly, safely and affordably. Same-day delivery, real-time tracking and nationwide coverage." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#top" class="logo">
+        <span class="logo-icon">📦</span>
+        <span class="logo-text">Parcel<span class="accent">Pal</span></span>
+      </a>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#services">Services</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#tracking">Tracking</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#tracking" class="btn btn-ghost">Track Parcel</a>
+        <a href="#pricing" class="btn btn-primary">Ship Now</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="badge">🚚 Trusted by 50,000+ customers</span>
+          <h1>Your Parcels, Delivered <span class="accent">Fast &amp; Safe</span></h1>
+          <p class="hero-sub">
+            ParcelPal is the easiest way to send and receive parcels. Same-day delivery,
+            live tracking and doorstep pickup — all at prices that make sense.
+          </p>
+          <div class="hero-cta">
+            <a href="#pricing" class="btn btn-primary btn-lg">Send a Parcel</a>
+            <a href="#how-it-works" class="btn btn-outline btn-lg">How It Works</a>
+          </div>
+          <ul class="hero-points">
+            <li>✔ Same-day &amp; next-day options</li>
+            <li>✔ Real-time GPS tracking</li>
+            <li>✔ Insured up to $1,000</li>
+          </ul>
+        </div>
+
+        <div class="hero-card">
+          <div class="quick-track">
+            <h3>Quick Track</h3>
+            <p>Enter your tracking number to see where your parcel is.</p>
+            <form id="heroTrackForm" class="track-form">
+              <input type="text" id="heroTrackInput" placeholder="e.g. PP-2481-9635" autocomplete="off" />
+              <button type="submit" class="btn btn-primary">Track</button>
+            </form>
+            <small class="hint">Try the demo number: <code>PP-2481-9635</code></small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Stats ===== -->
+    <section class="stats">
+      <div class="container stats-grid">
+        <div class="stat"><span class="stat-num" data-count="120000">0</span><span class="stat-label">Parcels Delivered</span></div>
+        <div class="stat"><span class="stat-num" data-count="98">0</span><span class="stat-label">% On-Time Rate</span></div>
+        <div class="stat"><span class="stat-num" data-count="350">0</span><span class="stat-label">Cities Covered</span></div>
+        <div class="stat"><span class="stat-num" data-count="24">0</span><span class="stat-label">/7 Support</span></div>
+      </div>
+    </section>
+
+    <!-- ===== Services ===== -->
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Our Services</span>
+          <h2>Delivery options for every need</h2>
+          <p>From urgent documents to bulky packages, we've got a service that fits.</p>
+        </div>
+        <div class="cards-grid">
+          <article class="card">
+            <div class="card-icon">⚡</div>
+            <h3>Same-Day Delivery</h3>
+            <p>Book before noon and your parcel arrives the very same day, anywhere in the city.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📍</div>
+            <h3>Real-Time Tracking</h3>
+            <p>Follow your parcel live on the map from pickup to doorstep, with instant notifications.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🛡️</div>
+            <h3>Secure Handling</h3>
+            <p>Every shipment is insured and handled by vetted, professional couriers.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🌍</div>
+            <h3>Nationwide Coverage</h3>
+            <p>We deliver to 350+ cities with reliable next-day service between major hubs.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🏠</div>
+            <h3>Doorstep Pickup</h3>
+            <p>No need to visit a drop-off point — our courier comes to you, on your schedule.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🏢</div>
+            <h3>Business Solutions</h3>
+            <p>Bulk rates, API integration and a dedicated account manager for online stores.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== How It Works ===== -->
+    <section class="section section-alt" id="how-it-works">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">How It Works</span>
+          <h2>Ship a parcel in 4 easy steps</h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>Book Online</h3>
+            <p>Tell us what you're sending, where it's going, and pick a delivery speed.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>We Pick It Up</h3>
+            <p>A courier arrives at your door within the time slot you chose.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>Track Live</h3>
+            <p>Watch your parcel move in real time and share the link with the recipient.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <h3>Delivered</h3>
+            <p>Proof of delivery with photo and signature, straight to your phone.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tracking ===== -->
+    <section class="section" id="tracking">
+      <div class="container tracking-inner">
+        <div class="section-head">
+          <span class="eyebrow">Track Your Parcel</span>
+          <h2>Where's my package?</h2>
+          <p>Enter your tracking number below for live status updates.</p>
+        </div>
+
+        <form id="trackForm" class="track-form track-form-lg">
+          <input type="text" id="trackInput" placeholder="Enter tracking number (e.g. PP-2481-9635)" autocomplete="off" />
+          <button type="submit" class="btn btn-primary">Track Parcel</button>
+        </form>
+
+        <div id="trackResult" class="track-result" hidden>
+          <div class="track-summary">
+            <div>
+              <h3 id="trackNumber"></h3>
+              <p id="trackRoute"></p>
+            </div>
+            <span class="status-pill" id="trackStatus"></span>
+          </div>
+          <ol class="timeline" id="trackTimeline"></ol>
+        </div>
+        <p id="trackError" class="track-error" hidden>
+          We couldn't find that tracking number. Double-check it and try again — or try the demo number <code>PP-2481-9635</code>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== Pricing ===== -->
+    <section class="section section-alt" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Pricing</span>
+          <h2>Simple, transparent pricing</h2>
+          <p>No hidden fees. Pay only for what you ship.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card">
+            <h3>Standard</h3>
+            <div class="price"><span class="amount">$4.99</span><span class="per">/ parcel</span></div>
+            <ul>
+              <li>✔ Delivery in 2–3 days</li>
+              <li>✔ Up to 5 kg</li>
+              <li>✔ Basic tracking</li>
+              <li>✔ Insurance up to $100</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline btn-block">Choose Standard</a>
+          </article>
+
+          <article class="price-card featured">
+            <span class="ribbon">Most Popular</span>
+            <h3>Express</h3>
+            <div class="price"><span class="amount">$9.99</span><span class="per">/ parcel</span></div>
+            <ul>
+              <li>✔ Next-day delivery</li>
+              <li>✔ Up to 10 kg</li>
+              <li>✔ Live GPS tracking</li>
+              <li>✔ Insurance up to $500</li>
+              <li>✔ Doorstep pickup</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary btn-block">Choose Express</a>
+          </article>
+
+          <article class="price-card">
+            <h3>Same-Day</h3>
+            <div class="price"><span class="amount">$14.99</span><span class="per">/ parcel</span></div>
+            <ul>
+              <li>✔ Delivered within hours</li>
+              <li>✔ Up to 15 kg</li>
+              <li>✔ Live GPS tracking</li>
+              <li>✔ Insurance up to $1,000</li>
+              <li>✔ Priority support</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline btn-block">Choose Same-Day</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Testimonials ===== -->
+    <section class="section" id="testimonials">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Reviews</span>
+          <h2>Loved by senders and recipients alike</h2>
+        </div>
+        <div class="cards-grid testimonials-grid">
+          <figure class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"Booked at 10am, delivered by 3pm. The live map tracking is brilliant — I knew exactly when to expect the courier."</blockquote>
+            <figcaption><strong>Sarah M.</strong><span>Small business owner</span></figcaption>
+          </figure>
+          <figure class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"We ship 200+ orders a week through ParcelPal's business plan. The API integration saved us hours every day."</blockquote>
+            <figcaption><strong>Omar K.</strong><span>E-commerce manager</span></figcaption>
+          </figure>
+          <figure class="testimonial">
+            <div class="stars">★★★★☆</div>
+            <blockquote>"Affordable, fast, and the courier was super friendly. Photo proof of delivery gives real peace of mind."</blockquote>
+            <figcaption><strong>Lina H.</strong><span>Frequent sender</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-band">
+      <div class="container cta-inner">
+        <h2>Ready to send your first parcel?</h2>
+        <p>Get an instant quote and book a pickup in under two minutes.</p>
+        <a href="#pricing" class="btn btn-light btn-lg">Get Started</a>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section class="section" id="contact">
+      <div class="container contact-inner">
+        <div class="section-head">
+          <span class="eyebrow">Contact</span>
+          <h2>Get in touch</h2>
+          <p>Questions about a shipment or our business plans? We reply within the hour.</p>
+        </div>
+        <form id="contactForm" class="contact-form">
+          <div class="form-row">
+            <label>Name
+              <input type="text" name="name" placeholder="Your name" required />
+            </label>
+            <label>Email
+              <input type="email" name="email" placeholder="you@example.com" required />
+            </label>
+          </div>
+          <label>Message
+            <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+          <p id="contactSuccess" class="form-success" hidden>✔ Thanks! Your message has been sent — we'll get back to you shortly.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="logo">
+          <span class="logo-icon">📦</span>
+          <span class="logo-text">Parcel<span class="accent">Pal</span></span>
+        </a>
+        <p>Fast, reliable parcel delivery — from your door to theirs.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#services">Services</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#testimonials">Reviews</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#tracking">Track a Parcel</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@parcelpal.example">hello@parcelpal.example</a>
+        <a href="tel:+1234567890">+1 (234) 567-890</a>
+        <span>Mon–Sat, 8am–8pm</span>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 ParcelPal Delivery Service. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
