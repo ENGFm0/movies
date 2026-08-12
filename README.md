@@ -1,32 +1,32 @@
-# ParcelPal — Delivery Service Website
+# شُرعة إكسبريس — موقع خدمة شحن وتوصيل الطرود
 
-A modern, responsive landing page for **ParcelPal**, a parcel delivery service.
+موقع تعريفي متجاوب (RTL بالعربية) لخدمة **شُرعة إكسبريس** لشحن وتوصيل الطرود.
 
-## Features
+## الأقسام
 
-- **Hero section** with a quick-track widget
-- **Animated stats** (parcels delivered, on-time rate, cities covered)
-- **Services** — same-day delivery, live tracking, secure handling, business solutions
-- **How It Works** — 4-step shipping flow
-- **Parcel tracking** with an interactive demo timeline
-  (try tracking numbers `PP-2481-9635` or `PP-1102-4478`)
-- **Pricing** — Standard / Express / Same-Day tiers
-- **Testimonials**, **contact form**, and full footer
-- Fully responsive with a mobile navigation menu
+- **الرئيسية** — هيرو بتدرج كحلي/أحمر مع أزرار الإجراءات
+- **إحصائيات متحركة** — شحنات، نسبة التوصيل، المدن المغطاة
+- **تتبع شحنتك** — نموذج تتبع تفاعلي مع خط زمني لحالة الشحنة
+  (جرّب الأرقام التجريبية: `SE123456789` أو `SE987654321`)
+- **خدماتنا** — توصيل داخل المدينة، شحن بين المدن، الشحن الدولي، حلول المتاجر الإلكترونية
+- **كيف نعمل** — 4 خطوات للشحن
+- **الأسعار** — 3 باقات (اقتصادي / سريع / نفس اليوم)
+- **تواصل معنا** — معلومات التواصل ونموذج مراسلة
+- **فوتر** كامل بالروابط والخدمات
 
-## Running locally
+## التشغيل محلياً
 
-It's a static site — no build step needed. Open `index.html` directly, or serve it:
+الموقع صفحة ثابتة — بدون خطوة بناء. افتح `index.html` مباشرة، أو شغّل خادماً بسيطاً:
 
 ```bash
 python3 -m http.server 8000
-# then open http://localhost:8000
+# ثم افتح http://localhost:8000
 ```
 
-## Structure
+## بنية الملفات
 
 ```
-index.html      # All page markup
-css/style.css   # Styles (navy + orange theme, responsive)
-js/main.js      # Mobile nav, stat counters, demo tracking, contact form
+index.html      # صفحة الموقع كاملة
+css/style.css   # التنسيقات (كحلي + أحمر، متجاوب، RTL)
+js/main.js      # قائمة الجوال، العدادات، التتبع التجريبي، نموذج التواصل
 ```

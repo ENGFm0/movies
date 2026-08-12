@@ -1,6 +1,6 @@
-/* ============ ParcelPal — Interactions ============ */
+/* ============ شُرعة إكسبريس — التفاعلات ============ */
 
-// ---------- Mobile nav ----------
+// ---------- قائمة الجوال ----------
 const navToggle = document.getElementById("navToggle");
 const mainNav = document.getElementById("mainNav");
 
@@ -16,7 +16,7 @@ mainNav.addEventListener("click", (e) => {
   }
 });
 
-// ---------- Animated stats counters ----------
+// ---------- عدادات الإحصائيات ----------
 const stats = document.querySelectorAll(".stat-num");
 
 const animateCount = (el) => {
@@ -27,7 +27,7 @@ const animateCount = (el) => {
   const tick = (now) => {
     const progress = Math.min((now - start) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(target * eased).toLocaleString();
+    el.textContent = Math.round(target * eased).toLocaleString("ar-SA");
     if (progress < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
@@ -47,33 +47,34 @@ const statsObserver = new IntersectionObserver(
 
 stats.forEach((el) => statsObserver.observe(el));
 
-// ---------- Parcel tracking (demo data) ----------
+// ---------- تتبع الشحنات (بيانات تجريبية) ----------
 const DEMO_SHIPMENTS = {
-  "PP-2481-9635": {
-    route: "Riyadh → Jeddah",
-    status: "Out for Delivery",
+  SE123456789: {
+    route: "الرياض ← جدة",
+    status: "قيد التوصيل",
     events: [
-      { title: "Order confirmed", meta: "Riyadh sorting hub — Aug 10, 09:14", state: "done" },
-      { title: "Picked up from sender", meta: "Riyadh — Aug 10, 13:40", state: "done" },
-      { title: "In transit", meta: "Departed Riyadh hub — Aug 11, 06:05", state: "done" },
-      { title: "Arrived at local facility", meta: "Jeddah hub — Aug 12, 05:32", state: "done" },
-      { title: "Out for delivery", meta: "Courier: Ahmed • ETA today 2–4pm", state: "current" },
-      { title: "Delivered", meta: "Pending", state: "" },
+      { title: "تم تأكيد الطلب", meta: "مركز فرز الرياض — 10 أغسطس، 9:14 ص", state: "done" },
+      { title: "تم استلام الشحنة من المرسل", meta: "الرياض — 10 أغسطس، 1:40 م", state: "done" },
+      { title: "الشحنة في الطريق", meta: "غادرت مركز الرياض — 11 أغسطس، 6:05 ص", state: "done" },
+      { title: "وصلت إلى مركز التوزيع", meta: "مركز جدة — 12 أغسطس، 5:32 ص", state: "done" },
+      { title: "خرجت للتوصيل", meta: "المندوب: أحمد • الوصول المتوقع اليوم 2–4 م", state: "current" },
+      { title: "تم التسليم", meta: "قيد الانتظار", state: "" },
     ],
   },
-  "PP-1102-4478": {
-    route: "Dammam → Riyadh",
-    status: "In Transit",
+  SE987654321: {
+    route: "الدمام ← الرياض",
+    status: "في الطريق",
     events: [
-      { title: "Order confirmed", meta: "Dammam hub — Aug 11, 15:02", state: "done" },
-      { title: "Picked up from sender", meta: "Dammam — Aug 12, 08:15", state: "done" },
-      { title: "In transit", meta: "On the way to Riyadh hub", state: "current" },
-      { title: "Out for delivery", meta: "Pending", state: "" },
-      { title: "Delivered", meta: "Pending", state: "" },
+      { title: "تم تأكيد الطلب", meta: "مركز الدمام — 11 أغسطس، 3:02 م", state: "done" },
+      { title: "تم استلام الشحنة من المرسل", meta: "الدمام — 12 أغسطس، 8:15 ص", state: "done" },
+      { title: "الشحنة في الطريق", meta: "متجهة إلى مركز الرياض", state: "current" },
+      { title: "خرجت للتوصيل", meta: "قيد الانتظار", state: "" },
+      { title: "تم التسليم", meta: "قيد الانتظار", state: "" },
     ],
   },
 };
 
+const trackEmpty = document.getElementById("trackEmpty");
 const trackResult = document.getElementById("trackResult");
 const trackError = document.getElementById("trackError");
 const trackNumber = document.getElementById("trackNumber");
@@ -86,10 +87,12 @@ function renderTracking(rawInput) {
   if (!code) return;
 
   const shipment = DEMO_SHIPMENTS[code];
+  trackEmpty.hidden = true;
 
   if (!shipment) {
     trackResult.hidden = true;
     trackError.hidden = false;
+    trackError.scrollIntoView({ behavior: "smooth", block: "nearest" });
     return;
   }
 
@@ -124,16 +127,7 @@ document.getElementById("trackForm").addEventListener("submit", (e) => {
   renderTracking(document.getElementById("trackInput").value);
 });
 
-// Hero quick-track: forward to the main tracking section
-document.getElementById("heroTrackForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const value = document.getElementById("heroTrackInput").value;
-  document.getElementById("trackInput").value = value.trim().toUpperCase();
-  document.getElementById("tracking").scrollIntoView({ behavior: "smooth" });
-  renderTracking(value);
-});
-
-// ---------- Contact form (demo) ----------
+// ---------- نموذج التواصل (تجريبي) ----------
 const contactForm = document.getElementById("contactForm");
 const contactSuccess = document.getElementById("contactSuccess");
 
