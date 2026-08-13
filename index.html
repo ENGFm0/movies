@@ -30,7 +30,9 @@
         <a href="#top">الرئيسية</a>
         <a href="#tracking">تتبع شحنة</a>
         <a href="#services">خدماتنا</a>
+        <a href="#quote">أرسل شحنة</a>
         <a href="#pricing">الأسعار</a>
+        <a href="#faq">أسئلة شائعة</a>
         <a href="#contact">تواصل معنا</a>
       </nav>
 
@@ -50,7 +52,7 @@
         </p>
         <div class="hero-cta">
           <a href="#tracking" class="btn btn-primary btn-lg">تتبع شحنتك</a>
-          <a href="#contact" class="btn btn-outline-light btn-lg">أرسل شحنة</a>
+          <a href="#quote" class="btn btn-outline-light btn-lg">أرسل شحنة</a>
         </div>
         <ul class="hero-points">
           <li>✔ توصيل داخل المدينة في نفس اليوم</li>
@@ -229,14 +231,139 @@
               <li>✔ تأمين حتى 5,000 ر.س</li>
               <li>✔ دعم بأولوية قصوى</li>
             </ul>
-            <a href="#contact" class="btn btn-outline btn-block">اختر نفس اليوم</a>
+            <a href="#quote" class="btn btn-outline btn-block">اختر نفس اليوم</a>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- ===== أرسل شحنة (حاسبة تقديرية) ===== -->
+    <section class="section section-alt" id="quote">
+      <div class="container quote-inner">
+        <div class="section-head">
+          <span class="eyebrow">أرسل شحنة</span>
+          <h2>احسب تكلفة شحنتك</h2>
+          <p>عبّئ التفاصيل واحصل على سعر تقديري فوري، ثم اطلب الاستلام من باب منزلك.</p>
+        </div>
+
+        <form id="quoteForm" class="quote-form">
+          <div class="quote-grid">
+            <label>من مدينة
+              <select name="from" required>
+                <option value="" disabled selected>اختر المدينة</option>
+                <option>الرياض</option>
+                <option>جدة</option>
+                <option>الدمام</option>
+                <option>مكة المكرمة</option>
+                <option>المدينة المنورة</option>
+                <option>أبها</option>
+                <option>تبوك</option>
+              </select>
+            </label>
+            <label>إلى مدينة
+              <select name="to" required>
+                <option value="" disabled selected>اختر المدينة</option>
+                <option>الرياض</option>
+                <option>جدة</option>
+                <option>الدمام</option>
+                <option>مكة المكرمة</option>
+                <option>المدينة المنورة</option>
+                <option>أبها</option>
+                <option>تبوك</option>
+              </select>
+            </label>
+            <label>الوزن التقريبي
+              <select name="weight" required>
+                <option value="2">حتى 5 كجم</option>
+                <option value="4">من 5 إلى 10 كجم</option>
+                <option value="7">من 10 إلى 15 كجم</option>
+                <option value="11">أكثر من 15 كجم</option>
+              </select>
+            </label>
+            <label>سرعة التوصيل
+              <select name="speed" required>
+                <option value="15">اقتصادي (2–3 أيام)</option>
+                <option value="25">سريع (اليوم التالي)</option>
+                <option value="40">نفس اليوم</option>
+              </select>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg">احسب السعر التقديري</button>
+
+          <div id="quoteResult" class="quote-result" hidden>
+            <div class="quote-price">
+              <span class="quote-label">السعر التقديري</span>
+              <span class="quote-amount"><span id="quoteAmount">0</span> ر.س</span>
+            </div>
+            <p class="quote-note">السعر تقديري وقد يتغير حسب الأبعاد والوجهة النهائية. للطلب الفعلي تواصل معنا أو اطلب الاستلام.</p>
+            <a href="#contact" class="btn btn-outline btn-block">اطلب استلام الشحنة</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== آراء العملاء ===== -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">آراء العملاء</span>
+          <h2>عملاؤنا هم أساس ثقتنا</h2>
+        </div>
+        <div class="cards-grid reviews-grid">
+          <figure class="review">
+            <div class="stars">★★★★★</div>
+            <blockquote>"طلبت الاستلام الساعة 10 صباحاً ووصلت الشحنة قبل العصر. خدمة التتبع اللحظي ممتازة وأعرف مكان طردي بالضبط."</blockquote>
+            <figcaption><strong>سارة الم.</strong><span>صاحبة متجر إلكتروني</span></figcaption>
+          </figure>
+          <figure class="review">
+            <div class="stars">★★★★★</div>
+            <blockquote>"نشحن أكثر من 200 طلب أسبوعياً عبر شُرعة إكسبريس. ربط الـ API مع متجرنا وفّر علينا ساعات كل يوم."</blockquote>
+            <figcaption><strong>عمر ك.</strong><span>مدير عمليات متجر</span></figcaption>
+          </figure>
+          <figure class="review">
+            <div class="stars">★★★★☆</div>
+            <blockquote>"أسعار مناسبة وتوصيل سريع، والمندوب كان لطيف جداً. إثبات التسليم بالصورة يعطي راحة بال حقيقية."</blockquote>
+            <figcaption><strong>لينا هـ.</strong><span>عميلة دائمة</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== أسئلة شائعة ===== -->
+    <section class="section section-alt" id="faq">
+      <div class="container faq-inner">
+        <div class="section-head">
+          <span class="eyebrow">أسئلة شائعة</span>
+          <h2>كل ما تحتاج معرفته</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>كم يستغرق توصيل الشحنة؟</summary>
+            <p>يعتمد على الخدمة المختارة: التوصيل داخل المدينة قد يتم في نفس اليوم، والشحن بين المدن خلال 24 إلى 48 ساعة، أما الشحن الدولي فيختلف حسب الوجهة.</p>
+          </details>
+          <details class="faq-item">
+            <summary>كيف أتتبع شحنتي؟</summary>
+            <p>بعد استلام الشحنة يصلك رقم تتبع. أدخله في قسم «تتبع شحنة» بالأعلى لعرض حالة الطرد لحظياً من الاستلام حتى التسليم.</p>
+          </details>
+          <details class="faq-item">
+            <summary>هل توفّرون خدمة الدفع عند الاستلام؟</summary>
+            <p>نعم، خدمة الدفع عند الاستلام متاحة للمتاجر الإلكترونية ضمن حلول الأعمال، مع تحويل المبالغ المحصّلة بشكل دوري.</p>
+          </details>
+          <details class="faq-item">
+            <summary>ماذا لو تأخرت شحنتي أو تعرّضت لضرر؟</summary>
+            <p>كل شحنة مؤمّنة حسب الباقة المختارة. في حال التأخير أو الضرر تواصل مع الدعم على الرقم الموحّد وسنعالج طلبك فوراً.</p>
+          </details>
+          <details class="faq-item">
+            <summary>هل يمكن جدولة استلام الشحنة من المنزل؟</summary>
+            <p>نعم، يمكنك طلب الاستلام من باب المنزل أو المتجر واختيار الفترة الزمنية المناسبة، ويصلك المندوب في الموعد المحدد.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== تواصل معنا ===== -->
-    <section class="section section-alt" id="contact">
+    <section class="section" id="contact">
       <div class="container contact-inner">
         <div class="section-head">
           <span class="eyebrow">تواصل معنا</span>
@@ -306,7 +433,9 @@
         <a href="#top">الرئيسية</a>
         <a href="#tracking">تتبع شحنة</a>
         <a href="#services">خدماتنا</a>
+        <a href="#quote">أرسل شحنة</a>
         <a href="#pricing">الأسعار</a>
+        <a href="#faq">أسئلة شائعة</a>
         <a href="#contact">تواصل معنا</a>
       </div>
       <div class="footer-col">

@@ -127,6 +127,26 @@ document.getElementById("trackForm").addEventListener("submit", (e) => {
   renderTracking(document.getElementById("trackInput").value);
 });
 
+// ---------- حاسبة سعر الشحن (تقديري) ----------
+const quoteForm = document.getElementById("quoteForm");
+const quoteResult = document.getElementById("quoteResult");
+const quoteAmount = document.getElementById("quoteAmount");
+
+quoteForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const data = new FormData(quoteForm);
+
+  const base = Number(data.get("speed"));      // سعر الأساس حسب السرعة
+  const weightFee = Number(data.get("weight")); // رسوم الوزن
+  const sameCity = data.get("from") === data.get("to");
+  const intercityFee = sameCity ? 0 : 10;       // رسوم إضافية بين المدن
+
+  const total = base + weightFee + intercityFee;
+  quoteAmount.textContent = total.toLocaleString("ar-SA");
+  quoteResult.hidden = false;
+  quoteResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
 // ---------- نموذج التواصل (تجريبي) ----------
 const contactForm = document.getElementById("contactForm");
 const contactSuccess = document.getElementById("contactSuccess");
